@@ -21,7 +21,7 @@ const randomFunc = {
 // Event Listeners
 clipboard.addEventListener('click', () => {
     const textarea = document.createElement('textarea');
-    const password = result.innerHTML;
+    const password = result.innerText;
 
     if (!password) { return };
 
@@ -30,7 +30,7 @@ clipboard.addEventListener('click', () => {
     textarea.select();
     document.execCommand('copy');
     textarea.remove();
-    alert(`Password copied to clipboard: ${password}`);
+    alert('Password copied to clipboard!');
 })
 
 generate.addEventListener('click', () => {
@@ -41,17 +41,20 @@ generate.addEventListener('click', () => {
         number = number__div.checked,
         symbol = symbol__div.checked
 
-    let password = '';
+    result.innerText = generatePassword(length, upper, lower, number, symbol);
+})
 
-    const countChecked = upper + lower + number + symbol;
+function generatePassword(length, upper, lower, number, symbol) {
+    const checkedCount = upper + lower + number + symbol;
     const optionsArray = [{ upper }, { lower }, { number }, { symbol }];
     const checkedArray = optionsArray.filter(item => Object.values(item)[0]);
 
-    if (countChecked === 0) {
+    if (checkedCount === 0) {
         return '';
     }
 
-    for (i = 0; i < length; i += countChecked) {
+    let password = '';
+    for (let i = 0; i < length; i += checkedCount) {
         checkedArray.forEach(item => {
             const option = Object.keys(item)[0];
             password += randomFunc[option]();
@@ -59,8 +62,8 @@ generate.addEventListener('click', () => {
     }
 
     const finalPassword = password.slice(0, length);
-    result.innerHTML = finalPassword;
-})
+    return finalPassword;
+}
 
 // Functions - Get Random
 function getUppercase() {
